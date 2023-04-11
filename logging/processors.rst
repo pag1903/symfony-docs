@@ -31,7 +31,7 @@ using a processor::
         }
 
         // this method is called for each log record; optimize it to not hurt performance
-        public function __invoke(LogRecord $record): LogRecord
+        public function __invoke(LogRecord $record): void
         {
             try {
                 $session = $this->requestStack->getSession();
@@ -39,14 +39,12 @@ using a processor::
                 return;
             }
             if (!$session->isStarted()) {
-                return $record;
+                return;
             }
 
             $sessionId = substr($session->getId(), 0, 8) ?: '????????';
 
             $record->extra['token'] = $sessionId.'-'.substr(uniqid('', true), -8);
-
-            return $record;
         }
     }
 
